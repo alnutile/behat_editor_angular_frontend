@@ -1,0 +1,9 @@
+name = Behat Editor Angular Front End
+description = Angular Front End
+core = 7.x
+package = Behat Editor
+version = 7.x-1.0
+project = behat_editor
+dependencies[] = angularjs
+dependencies[] = jquery_update
+dependencies[] = behat_editor_services

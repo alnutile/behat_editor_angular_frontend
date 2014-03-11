@@ -1,0 +1,13 @@
+<?php
+
+
+/**
+ * need new jquery!
+ */
+function behat_editor_angular_frontend_install() {
+    variable_set('jquery_update_jquery_version', '1.8');
+}
+
+function behat_editor_angular_frontend_enable() {
+    variable_set('jquery_update_jquery_version', '1.8');
+}
