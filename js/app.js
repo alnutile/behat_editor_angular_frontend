@@ -28,6 +28,10 @@ app.config(['$routeProvider',
                 templateUrl: '/' + path + '/templates/site-show.html',
                 controller:  'SiteController'
             }).
+            when('/sites/:sid/tests/new', {
+                templateUrl: '/' + path + '/templates/test-edit.html',
+                controller:  'TestNewController'
+            }).
             when('/sites/:sid/tests/:tname', {
                 templateUrl: '/' + path + '/templates/test-show.html',
                 controller:  'TestController'
