@@ -21,7 +21,6 @@ testsController.controller('TestEditController', ['$scope', '$http', '$location'
         );
         $scope.tests = TestsServices.get({sid: $routeParams.sid, tname: $routeParams.tname}, function(data) {
             $scope.test = data;
-            console.log(data);
             $scope.test_content = data.content;
             $scope.test_html = data.content_html;
         });
@@ -39,12 +38,71 @@ testsController.controller('TestEditController', ['$scope', '$http', '$location'
             TestsServices.update({sid: $routeParams.sid, tname: $routeParams.tname}, params);
         }
 
+        //@TODO move ace into a shared service, or
         $scope.testLoaded = function(_editor) {
             var _session = _editor.getSession();
             var _renderer = _editor.renderer;
 
             // Options
             _editor.setReadOnly(true);
+            _editor.setShowInvisibles(true);
+            _editor.setDisplayIndentGuides(true);
+            _session.setUndoManager(new ace.UndoManager());
+            _renderer.setShowGutter(true);
+        }
+    }]);
+
+testsController.controller('TestNewController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices){
+        $scope.token = $http({method: 'GET', url:'/services/session/token'}).success(
+            function(data, status, headers, config){
+                $http.defaults.headers.post['X-CSRF-Token'] = data;
+            }
+        );
+
+        $scope.test = {};
+        $scope.site = {};
+
+        var name = new Date().getTime();
+        name = name + '.feature';
+
+        $scope.test.name = name;
+        $scope.test_content = "Feature: Start Your Test..";
+        SitesServices.get({sid: $routeParams.sid}, function(data) {
+            $scope.site = data;
+            $scope.test = {
+                "name": $scope.test.name,
+                "path": $scope.site.test_files_root_path + '/' + name,
+                "content": ''
+            };
+        });
+
+        $scope.saveTest = function(model) {
+            //1. take the latest model and pass it to the endpoint
+            $scope.test.content = model;
+            var params = {
+                'test': $scope.test,
+                'site': $scope.site
+            }
+
+            TestsServices.create({sid: $routeParams.sid}, params, function(data){
+                if(data.errors === 0){
+                    console.log(data);
+                    $location.path("/sites/" + $scope.site.nid + "/tests/" + data.data.name_dashed + "/edit");
+                } else {
+                    //output a message to the user
+                }
+            });
+        }
+
+        $scope.testLoaded = function(_editor) {
+            var _session = _editor.getSession();
+            var _renderer = _editor.renderer;
+
+            // Options
+            _editor.setReadOnly(true);
+            _editor.setShowInvisibles(true);
+            _editor.setDisplayIndentGuides(true);
             _session.setUndoManager(new ace.UndoManager());
             _renderer.setShowGutter(true);
         }
