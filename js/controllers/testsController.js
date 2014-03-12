@@ -1,19 +1,31 @@
 var testsController = angular.module('testsController', ['ngSanitize']);
 
-testsController.controller('TestController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices',
-    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices){
+testsController.controller('TestController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices){
+        $scope.test_results = '<strong>Click run to see results...</strong>';
+
         $scope.tests = TestsServices.get({sid: $routeParams.sid, tname: $routeParams.tname}, function(data) {
             $scope.test = data;
             $scope.test_html = data.content_html;
         });
         $scope.sites = SitesServices.get({sid: $routeParams.sid}, function(data) {
-            console.log(data)
             $scope.site = data;
         });
+
+        $scope.runTest = function() {
+            BehatServices.get({sid: $routeParams.sid, tname: $routeParams.tname}, function(data){
+                if(data.errors == 0) {
+                    var snag_behat_div = jQuery(data.data).get(9);
+                    $scope.test_results = jQuery(snag_behat_div).html();
+                } else {
+                    //output error message
+                }
+            });
+        }
     }]);
 
-testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices',
-    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices){
+testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices){
         $scope.token = $http({method: 'GET', url:'/services/session/token'}).success(
             function(data, status, headers, config){
                 $http.defaults.headers.post['X-CSRF-Token'] = data;

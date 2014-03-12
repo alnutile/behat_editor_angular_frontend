@@ -9,7 +9,8 @@ var app = angular.module('behatEditor', [
     'testsServices',
     'sitesController',
     'dashController',
-    'testsController'
+    'testsController',
+    'behatServices'
 ]);
 
 app.config(['$routeProvider',

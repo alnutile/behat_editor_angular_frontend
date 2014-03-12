@@ -1,1 +1,6 @@
 .ace_editor { height: 600px; }
+
+
+body {
+    font-size: 13px !important; /* the first one :( */
+}
