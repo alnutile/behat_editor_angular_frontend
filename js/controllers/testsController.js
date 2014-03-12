@@ -2,8 +2,7 @@ var testsController = angular.module('testsController', ['ngSanitize']);
 
 testsController.controller('TestController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'addAlert', 'runTest', 'closeAlert',
     function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest, closeAlert){
-        //$scope.alert_tempalate = { name: 'alert_template', url: '/' + Drupal.settings.behatEditor.full_path + '/templates/alerts.html' }
-        $scope.alerts = [{ type: 'info', msg: "Test ..."}];
+        $scope.alerts = [];
         $scope.test_results = '<strong>Click run to see results...</strong>';
 
         $scope.tests = TestsServices.get({sid: $routeParams.sid, tname: $routeParams.tname}, function(data) {
@@ -23,8 +22,11 @@ testsController.controller('TestController', ['$scope', '$http', '$location', '$
         }
     }]);
 
-testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'BehatServices', 'addAlert', 'runTest',
-    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest){
+testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'addAlert', 'runTest', 'closeAlert',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest, closeAlert){
+        $scope.alerts = [];
+        $scope.test_results = '<strong>Click run to see results...</strong>';
+
         $scope.token = $http({method: 'GET', url:'/services/session/token'}).success(
             function(data, status, headers, config){
                 $http.defaults.headers.post['X-CSRF-Token'] = data;
@@ -38,6 +40,10 @@ testsController.controller('TestEditController', ['$scope', '$http', '$location'
         $scope.sites = SitesServices.get({sid: $routeParams.sid}, function(data) {
             $scope.site = data;
         });
+
+        $scope.closeAlert = function(index) {
+            closeAlert(index, $scope);
+        };
 
         $scope.runTest = function() {
             runTest('success', 'Running test...', $scope);

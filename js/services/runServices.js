@@ -9,7 +9,9 @@ runServices.factory('runTest', ['$routeParams', '$rootScope', 'addAlert', 'Behat
                 if(data.errors == 0) {
                     var snag_behat_div = jQuery(data.data).get(9);
                     $scope.test_results = jQuery(snag_behat_div).html();
+                    addAlert('info', 'Test Completed...', $scope);
                 } else {
+                    addAlert('danger', 'Problem Running Test', $scope);
                     //output error message
                 }
             });
