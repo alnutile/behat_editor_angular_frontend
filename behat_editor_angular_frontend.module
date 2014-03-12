@@ -16,13 +16,16 @@ function behat_editor_angular_frontend_dash() {
     $path = drupal_get_path('module', 'behat_editor_angular_frontend');
     drupal_add_js(array('behatEditor' => array('full_path' => $path)), 'setting');
     angularjs_init_application('behatEditor');
-    drupal_add_css($path . '/css/app.css');
     drupal_add_css($path . '/css/bootstrap.css');
+    drupal_add_css($path . '/css/app.css');
     drupal_add_js($path . '/js/angular-ui/ui-bootstrap-tpls-0.10.0.min.js');
     drupal_add_js($path . '/js/angular-ace/ace.js');
     drupal_add_js($path . '/js/angular-ace/ui-ace.min.js');
     drupal_add_js($path . '/js/services/sitesServices.js');
+    drupal_add_js($path . '/js/services/runServices.js');
     drupal_add_js($path . '/js/services/testsServices.js');
+    drupal_add_js($path . '/js/services/behatServices.js');
+    drupal_add_js($path . '/js/services/alertServices.js');
     drupal_add_js($path . '/js/controllers/sitesController.js');
     drupal_add_js($path . '/js/controllers/dashController.js');
     drupal_add_js($path . '/js/controllers/testsController.js');

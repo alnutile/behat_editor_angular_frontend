@@ -1,19 +1,32 @@
 var testsController = angular.module('testsController', ['ngSanitize']);
 
-testsController.controller('TestController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices',
-    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices){
+testsController.controller('TestController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'addAlert', 'runTest', 'closeAlert',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest, closeAlert){
+        $scope.alerts = [];
+        $scope.test_results = '<strong>Click run to see results...</strong>';
+
         $scope.tests = TestsServices.get({sid: $routeParams.sid, tname: $routeParams.tname}, function(data) {
             $scope.test = data;
             $scope.test_html = data.content_html;
         });
         $scope.sites = SitesServices.get({sid: $routeParams.sid}, function(data) {
-            console.log(data)
             $scope.site = data;
         });
+
+        $scope.closeAlert = function(index) {
+            closeAlert(index, $scope);
+        };
+
+        $scope.runTest = function() {
+              runTest('success', 'Running test...', $scope);
+        }
     }]);
 
-testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices',
-    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices){
+testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'addAlert', 'runTest', 'closeAlert',
+    function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest, closeAlert){
+        $scope.alerts = [];
+        $scope.test_results = '<strong>Click run to see results...</strong>';
+
         $scope.token = $http({method: 'GET', url:'/services/session/token'}).success(
             function(data, status, headers, config){
                 $http.defaults.headers.post['X-CSRF-Token'] = data;
@@ -27,6 +40,14 @@ testsController.controller('TestEditController', ['$scope', '$http', '$location'
         $scope.sites = SitesServices.get({sid: $routeParams.sid}, function(data) {
             $scope.site = data;
         });
+
+        $scope.closeAlert = function(index) {
+            closeAlert(index, $scope);
+        };
+
+        $scope.runTest = function() {
+            runTest('success', 'Running test...', $scope);
+        }
 
         $scope.saveTest = function(model) {
             //1. take the latest model and pass it to the endpoint
