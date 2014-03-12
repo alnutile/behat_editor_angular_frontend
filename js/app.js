@@ -7,6 +7,8 @@ var app = angular.module('behatEditor', [
     'ui.bootstrap',
     'sitesServices',
     'testsServices',
+    'alertServices',
+    'runServices',
     'sitesController',
     'dashController',
     'testsController',

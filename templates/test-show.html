@@ -1,4 +1,9 @@
-<div class="container" ng-controller="TestController">
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
+    </div>
     <div class="row clearfix">
         <div class="col-md-12 column">
             <ul class="breadcrumb">
