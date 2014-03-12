@@ -24,6 +24,10 @@ testsController.controller('TestController', ['$scope', '$http', '$location', '$
 
 testsController.controller('TestEditController', ['$scope', '$http', '$location', '$route', '$routeParams', 'SitesServices', 'TestsServices', 'BehatServices', 'addAlert', 'runTest', 'closeAlert',
     function($scope, $http, $location, $route, $routeParams, SitesServices, TestsServices, BehatServices, addAlert, runTest, closeAlert){
+
+        $scope.steps = {}
+        $scope.steps.default = "Your Step Here..."
+
         $scope.alerts = [];
         $scope.test_results = '<strong>Click run to see results...</strong>';
 
@@ -50,13 +54,38 @@ testsController.controller('TestEditController', ['$scope', '$http', '$location'
         }
 
         $scope.saveTest = function(model) {
+            addAlert('info', 'Saving test..', $scope);
             //1. take the latest model and pass it to the endpoint
             $scope.test.content = model;
             var params = {
                 'test': $scope.test,
                 'site': $scope.site
             }
-            TestsServices.update({sid: $routeParams.sid, tname: $routeParams.tname}, params);
+            $results = TestsServices.update({sid: $routeParams.sid, tname: $routeParams.tname}, params);
+            console.log($results);
+            addAlert('info', 'Test Saved..', $scope);
+        }
+
+
+        $scope.addQuotes = function(step) {
+            console.log(step);
+//            if(step.slice(-1) != '"') {
+                console.log(step.$modelValue)
+                step.$modelValue = "BLAH";
+                //$scope.steps.cfp.target = '"' + step + '"'
+//            }
+        }
+
+        $scope.addStep = function(step) {
+            var build = [];
+            angular.forEach(step, function(v, k){
+                console.log(typeof(v));
+                if(typeof(v) == 'string') {
+                    var output = v;
+                }
+                build.push(output);
+            });
+            $scope.test_content = $scope.test_content + "\n" + build.join(' ');
         }
 
         //@TODO move ace into a shared service, or
